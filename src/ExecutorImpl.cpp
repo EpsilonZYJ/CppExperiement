@@ -20,4 +20,9 @@ namespace adas
     {
         return new (std::nothrow) ExecutorImpl(pose);
     }
+
+    void ExecutorImpl::Execute(const std::string &commands) noexcept
+    {
+        // 先不给出实现，应该先定义好对应的测试用例
+    }
 }
