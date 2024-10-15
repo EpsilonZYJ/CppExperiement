@@ -23,6 +23,30 @@ namespace adas
 
     void ExecutorImpl::Execute(const std::string &commands) noexcept
     {
-        // 先不给出实现，应该先定义好对应的测试用例
+        // 遍历commands里面的每个指令cmd
+        for (const auto cmd : commands)
+        {
+            // 如果是M指令
+            if (cmd == 'M')
+            {
+                // 如果是M指令，则需要根据当前汽车姿势的heading（朝向）决定如何移动车辆（重新计算坐标）
+                if (pose.heading == 'E')
+                {
+                    ++pose.x;
+                }
+                else if (pose.heading == 'W')
+                {
+                    --pose.x;
+                }
+                else if (pose.heading == 'N')
+                {
+                    ++pose.y;
+                }
+                else if (pose.heading == 'S')
+                {
+                    --pose.y;
+                }
+            }
+        }
     }
 }
