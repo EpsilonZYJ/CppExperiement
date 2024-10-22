@@ -43,7 +43,8 @@ namespace adas
             }
             else if (cmd == 'R')
             {
-                TurnRight();
+                std::unique_ptr<TurnRightCommand> cmder = std::make_unique<TurnRightCommand>();
+                cmder->DoOperate(*this);
             }
         }
     }
