@@ -1,15 +1,16 @@
 #include "Executor.hpp"
+#include "PoseEq.hpp"
 #include <gtest/gtest.h>
 #include <memory>
 #include <tuple>
 
 namespace adas
 {
-    // 重载Pose的==，用的全局函数，用于比较两个姿态对象是不是相对
-    bool operator==(const Pose &lhs, const Pose &rhs)
-    {
-        return std::tie(lhs.x, lhs.y, lhs.heading) == std::tie(rhs.x, rhs.y, rhs.heading);
-    }
+    // // 重载Pose的==，用的全局函数，用于比较两个姿态对象是不是相对
+    // bool operator==(const Pose &lhs, const Pose &rhs)
+    // {
+    //     return std::tie(lhs.x, lhs.y, lhs.heading) == std::tie(rhs.x, rhs.y, rhs.heading);
+    // }
 
     // 下面两个测试用例，测试静态方法Executor::NewExecutor
     // 测试用例1
