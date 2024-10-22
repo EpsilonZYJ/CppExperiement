@@ -27,23 +27,25 @@ namespace adas
         // 遍历commands里面的每个指令cmd
         for (const auto cmd : commands)
         {
-            // 如果是M指令
+            //声明一个ICommand类型的智能指针
+            std::unique_ptr<ICommand> cmder;
+
             if (cmd == 'M')
             {
-                //智能指针指向MoveCommand实例，不用担心delete了
-               std::unique_ptr<MoveCommand> cmder = std::make_unique<MoveCommand>();
-                //*this就是ExecutorImpl的实例对象，作为实参传递给DoOperate方法
-                cmder->DoOperate(*this); //执行MoveCimmand的DoOperate方法，即Move()
-
+                //智能指针指向子类MoveCommand实例
+                cmder = std::make_unique<MoveCommand>();
             }
             else if (cmd == 'L')
             {
-                std::unique_ptr<TurnLeftCommand> cmder = std::make_unique<TurnLeftCommand>();
-                cmder->DoOperate(*this);
+                cmder = std::make_unique<TurnLeftCommand>();
             }
             else if (cmd == 'R')
             {
-                std::unique_ptr<TurnRightCommand> cmder = std::make_unique<TurnRightCommand>();
+                cmder = std::make_unique<TurnRightCommand>();
+            }
+
+            if(cmder)
+            {
                 cmder->DoOperate(*this);
             }
         }
