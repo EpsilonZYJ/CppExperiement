@@ -26,15 +26,20 @@ namespace adas
     void ExecutorImpl::Execute(const std::string &commands) noexcept
     {
         //表驱动
-        std::unordered_map<char, std::function<void(PoseHandler& PoseHandler)>> cmderMap;
-        //建立操作M和前进指令的映射关系
-        cmderMap.emplace('M', MoveCommand());
-        //建立操作L和左转指令的映射关系
-        cmderMap.emplace('L', TurnLeftCommand());
-        //建立操作R和右转指令的映射关系
-        cmderMap.emplace('R', TurnRightCommand());
-        //建立操作F和快速指令的映射关系
-        cmderMap.emplace('F', FastCommand());
+        std::unordered_map<char, std::function<void(PoseHandler& PoseHandler)>> cmderMap{
+            {'M', MoveCommand()}, //前进
+            {'L', TurnLeftCommand()}, //左转
+            {'R', TurnRightCommand()}, //右转
+            {'F', FastCommand()}, //快速
+        };
+        // //建立操作M和前进指令的映射关系
+        // cmderMap.emplace('M', MoveCommand());
+        // //建立操作L和左转指令的映射关系
+        // cmderMap.emplace('L', TurnLeftCommand());
+        // //建立操作R和右转指令的映射关系
+        // cmderMap.emplace('R', TurnRightCommand());
+        // //建立操作F和快速指令的映射关系
+        // cmderMap.emplace('F', FastCommand());
 
         // 遍历commands里面的每个指令cmd
         for (const auto cmd : commands)
