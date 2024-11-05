@@ -2,6 +2,7 @@
 
 #include <new>
 #include <memory>
+#include <unordered_map>
 
 namespace adas
 {
@@ -24,32 +25,25 @@ namespace adas
 
     void ExecutorImpl::Execute(const std::string &commands) noexcept
     {
+        //表驱动
+        std::unordered_map<char, std::unique_ptr<ICommand>> cmderMap;
+        //建立操作M和前进指令的映射关系
+        cmderMap.emplace('M', std::make_unique<MoveCommand>());
+        //建立操作L和左转指令的映射关系
+        cmderMap.emplace('L', std::make_unique<TurnLeftCommand>());
+        //建立操作R和右转指令的映射关系
+        cmderMap.emplace('R', std::make_unique<TurnRightCommand>());
+        //建立操作F和快速指令的映射关系
+        cmderMap.emplace('F', std::make_unique<FastCommand>());
+
         // 遍历commands里面的每个指令cmd
         for (const auto cmd : commands)
         {
-            //声明一个ICommand类型的智能指针
-            std::unique_ptr<ICommand> cmder = nullptr;
-            if (cmd == 'M')
-            {
-                //智能指针指向子类MoveCommand实例
-                cmder = std::make_unique<MoveCommand>();
-            }
-            else if (cmd == 'L')
-            {
-                cmder = std::make_unique<TurnLeftCommand>();
-            }
-            else if (cmd == 'R')
-            {
-                cmder = std::make_unique<TurnRightCommand>();
-            }
-            else if(cmd == 'F')
-            {
-                cmder = std::make_unique<FastCommand>();
-            }
-
-            if(cmder)
-            {
-                cmder->DoOperate(poseHandler);
+            //根据操作查找表驱动
+            const auto it = cmderMap.find(cmd);
+            // 如果找到表驱动，执行操作对应的指令
+            if(it != cmderMap.end()){
+                it->second->DoOperate(poseHandler);
             }
         }
     }
