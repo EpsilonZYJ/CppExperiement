@@ -26,18 +26,19 @@ namespace adas
         Pose Query(void) const noexcept override;
         // 第二结点新增加的纯虚函数，执行一个用字符串表示的指令
         void Execute(const std::string &commands) noexcept override;
+        
+        void Move(void) noexcept;
+        void TurnLeft(void) noexcept;
+        void TurnRight(void) noexcept;
+        void Fast(void) noexcept;
+        bool IsFast(void) const noexcept;
 
     private:
         // 私有数据成员，汽车当前姿态
         Pose pose;
         //是否处于加速状态，默认是false
         bool isFast;
-        void Move(void) noexcept;
-        void TurnLeft(void) noexcept;
-        void TurnRight(void) noexcept;
-        void Fast(void) noexcept;
-
-        bool IsFast(void) const noexcept;
+        
 
         class ICommand
         {
