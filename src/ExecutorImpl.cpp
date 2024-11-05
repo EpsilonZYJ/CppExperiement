@@ -5,11 +5,11 @@
 
 namespace adas
 {
-    ExecutorImpl::ExecutorImpl(const Pose &pose) noexcept : pose(pose), isFast(false) {}
+    ExecutorImpl::ExecutorImpl(const Pose &pose) noexcept : poseHandler(pose){}
 
     Pose ExecutorImpl::Query(void) const noexcept
     {
-        return pose;
+        return poseHandler.Query();
     }
 
     /*
@@ -28,8 +28,7 @@ namespace adas
         for (const auto cmd : commands)
         {
             //声明一个ICommand类型的智能指针
-            std::unique_ptr<ICommand> cmder;
-
+            std::unique_ptr<ICommand> cmder = nullptr;
             if (cmd == 'M')
             {
                 //智能指针指向子类MoveCommand实例
@@ -50,72 +49,8 @@ namespace adas
 
             if(cmder)
             {
-                cmder->DoOperate(*this);
+                cmder->DoOperate(poseHandler);
             }
         }
-    }
-
-    void ExecutorImpl::Move() noexcept
-    {
-        if(pose.heading == 'E')
-        {
-            ++pose.x;
-        }else if(pose.heading == 'W'){
-            --pose.x;
-        }else if(pose.heading == 'N'){
-            ++pose.y;
-        }else if(pose.heading == 'S'){
-            --pose.y;
-        }
-    }
-
-    void ExecutorImpl::TurnLeft() noexcept
-    {
-        if (pose.heading == 'E')
-        {
-            pose.heading = 'N';
-        }
-        else if (pose.heading == 'W')
-        {
-            pose.heading = 'S';
-        }
-        else if (pose.heading == 'N')
-        {
-            pose.heading = 'W';
-        }
-        else if (pose.heading == 'S')
-        {
-            pose.heading = 'E';
-        }
-    }
-    
-    void ExecutorImpl::TurnRight() noexcept
-    {
-        if (pose.heading == 'E')
-        {
-            pose.heading = 'S';
-        }
-        else if (pose.heading == 'S')
-        {
-            pose.heading = 'W';
-        }
-        else if (pose.heading == 'W')
-        {
-            pose.heading = 'N';
-        }
-        else if (pose.heading == 'N')
-        {
-            pose.heading = 'E';
-        }
-    }
-
-    void ExecutorImpl::Fast() noexcept
-    {
-        isFast = !isFast;
-    }
-
-    bool ExecutorImpl::IsFast() const noexcept
-    {
-        return isFast;
     }
 }

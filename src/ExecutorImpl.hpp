@@ -1,6 +1,8 @@
 #pragma once
 
+#include "Command.hpp"
 #include "Executor.hpp"
+#include "PoseHandler.hpp"
 #include <string>
 
 namespace adas
@@ -27,69 +29,7 @@ namespace adas
         // 第二结点新增加的纯虚函数，执行一个用字符串表示的指令
         void Execute(const std::string &commands) noexcept override;
         
-        void Move(void) noexcept;
-        void TurnLeft(void) noexcept;
-        void TurnRight(void) noexcept;
-        void Fast(void) noexcept;
-        bool IsFast(void) const noexcept;
-
     private:
-        // 私有数据成员，汽车当前姿态
-        Pose pose;
-        //是否处于加速状态，默认是false
-        bool isFast;
-        
-
-        class ICommand
-        {
-        public:
-        virtual ~ICommand() = default;
-        virtual void DoOperate(ExecutorImpl& ExecutorImpl) const noexcept = 0;
-        };
-
-        class MoveCommand final : public ICommand
-        {
-        public:
-            void DoOperate(ExecutorImpl& executor) const noexcept override
-            {
-                if(executor.IsFast())
-                {
-                    executor.Move();
-                }
-                executor.Move();
-            }
-        };
-        class TurnLeftCommand final : public ICommand
-        {
-        public:
-            void DoOperate(ExecutorImpl& executor) const noexcept override
-            {
-                if(executor.IsFast())
-                {
-                    executor.Move();
-                }
-                executor.TurnLeft();
-            }
-        };
-        class TurnRightCommand final : public ICommand
-        {
-        public:
-            void DoOperate(ExecutorImpl& executor) const noexcept override
-            {
-                if(executor.IsFast())
-                {
-                    executor.Move();
-                }
-                executor.TurnRight();
-            }
-        };
-        class FastCommand final : public ICommand
-        {
-        public:
-            void DoOperate(ExecutorImpl& executor) const noexcept override
-            {
-                executor.Fast();
-            }
-        };
+        PoseHandler poseHandler;    //状态管理类
     };
 }

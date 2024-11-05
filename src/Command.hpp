@@ -1,57 +1,57 @@
 #pragma once
 
-#include "ExecutorImpl.hpp"
+#include "PoseHandler.hpp"
 
 namespace adas{
     class ICommand
     {
     public:
     virtual ~ICommand() = default;
-    virtual void DoOperate(ExecutorImpl& ExecutorImpl) const noexcept = 0;
+    virtual void DoOperate(PoseHandler& poseHandler) const noexcept = 0;
     };
 
     class MoveCommand final : public ICommand
     {
     public:
-        void DoOperate(ExecutorImpl& executor) const noexcept override
+        void DoOperate(PoseHandler& poseHandler) const noexcept override
         {
-            if(executor.IsFast())
+            if(poseHandler.IsFast())
             {
-                executor.Move();
+                poseHandler.Move();
             }
-            executor.Move();
+            poseHandler.Move();
         }
     };
     class TurnLeftCommand final : public ICommand
     {
     public:
-        void DoOperate(ExecutorImpl& executor) const noexcept override
+        void DoOperate(PoseHandler& poseHandler) const noexcept override
         {
-            if(executor.IsFast())
+            if(poseHandler.IsFast())
             {
-                executor.Move();
+                poseHandler.Move();
             }
-            executor.TurnLeft();
+            poseHandler.TurnLeft();
         }
     };
     class TurnRightCommand final : public ICommand
     {
     public:
-        void DoOperate(ExecutorImpl& executor) const noexcept override
+        void DoOperate(PoseHandler& poseHandler) const noexcept override
         {
-            if(executor.IsFast())
+            if(poseHandler.IsFast())
             {
-                executor.Move();
+                poseHandler.Move();
             }
-            executor.TurnRight();
+            poseHandler.TurnRight();
         }
     };
     class FastCommand final : public ICommand
     {
     public:
-        void DoOperate(ExecutorImpl& executor) const noexcept override
+        void DoOperate(PoseHandler& poseHandler) const noexcept override
         {
-            executor.Fast();
+            poseHandler.Fast();
         }
     };
 } // namespace adas
