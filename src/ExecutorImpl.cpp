@@ -31,6 +31,7 @@ namespace adas
             {'L', TurnLeftCommand()}, //左转
             {'R', TurnRightCommand()}, //右转
             {'F', FastCommand()}, //快速
+            {'B', ReverseCommand()} //后退
         };
         // //建立操作M和前进指令的映射关系
         // cmderMap.emplace('M', MoveCommand());

@@ -10,7 +10,14 @@ namespace adas{
     // virtual ~ICommand() = default;
     // virtual void DoOperate(PoseHandler& poseHandler) const noexcept = 0;
     // };
-
+    class ReverseCommand final
+    {
+    public:
+        void operator()(PoseHandler& poseHandler) const noexcept{
+            poseHandler.Reverse();
+        }
+    };
+    
     class MoveCommand final //: public ICommand
     {
     public:
@@ -33,9 +40,18 @@ namespace adas{
 
         void operator()(PoseHandler& poseHandler) const noexcept{
             if(poseHandler.IsFast()){
-                poseHandler.Move();
+                if(poseHandler.IsReverse()){
+                    poseHandler.Backward();
+                }else{
+                    poseHandler.Forward();
+                }
             }
-            poseHandler.Move();
+
+            if(poseHandler.IsReverse()){
+                poseHandler.Backward();
+            }else{
+                poseHandler.Forward();
+            }
         }
     };
     class TurnLeftCommand final //: public ICommand
@@ -59,9 +75,18 @@ namespace adas{
 
         void operator()(PoseHandler& poseHandler) const noexcept{
             if(poseHandler.IsFast()){
-                poseHandler.Move();
+                if(poseHandler.IsReverse()){
+                    poseHandler.Backward();
+                }else{
+                    poseHandler.Forward();
+                }
             }
-            poseHandler.TurnLeft();
+            
+            if(poseHandler.IsReverse()){
+                poseHandler.TurnRight();
+            }else{
+                poseHandler.TurnLeft();
+            }
         }
     };
     class TurnRightCommand final //: public ICommand
@@ -84,9 +109,18 @@ namespace adas{
 
         void operator()(PoseHandler& poseHandler) const noexcept{
             if(poseHandler.IsFast()){
-                poseHandler.Move();
+                if(poseHandler.IsReverse()){
+                    poseHandler.Backward();
+                }else{
+                    poseHandler.Forward();
+                }
             }
-            poseHandler.TurnRight();
+
+            if(poseHandler.IsReverse()){
+                poseHandler.TurnLeft();
+            }else{
+                poseHandler.TurnRight();
+            }
         }
     };
 
@@ -105,4 +139,5 @@ namespace adas{
             poseHandler.Fast();
         }
     };
+
 } // namespace adas
