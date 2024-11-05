@@ -1,46 +1,24 @@
 #include "PoseHandler.hpp"
 
 namespace adas{
-    PoseHandler::PoseHandler(const Pose &pose) noexcept{
-        this->pose.x = pose.x;
-        this->pose.y = pose.y;
-        this->pose.heading = pose.heading;
-    } 
+    PoseHandler::PoseHandler(const Pose &pose) noexcept
+        //初始化Pose改为初始化Point和Direction
+        : point(pose.x, pose.y)
+        , facing(&Direction::GetDirection(pose.heading)) {}
 
     void PoseHandler::Move() noexcept{
-        if(pose.heading == 'E'){
-            ++pose.x;
-        }else if(pose.heading == 'W'){
-            --pose.x;
-        }else if(pose.heading == 'N'){
-            ++pose.y;
-        }else if(pose.heading == 'S'){
-            --pose.y;
-        }
+        // 将当前坐标加上方向向量
+        point += facing->Move();
     }
 
     void PoseHandler::TurnLeft() noexcept{
-        if (pose.heading == 'E'){
-            pose.heading = 'N';
-        }else if (pose.heading == 'W'){
-            pose.heading = 'S';
-        }else if (pose.heading == 'N'){
-            pose.heading = 'W';
-        }else if (pose.heading == 'S'){
-            pose.heading = 'E';
-        }
+        //左转
+        facing = &(facing->LeftOne());
     }
 
     void PoseHandler::TurnRight() noexcept{
-        if(pose.heading == 'E'){
-            pose.heading = 'S';
-        }else if(pose.heading == 'S'){
-            pose.heading = 'W';
-        }else if(pose.heading == 'W'){
-            pose.heading = 'N';
-        }else if(pose.heading == 'N'){
-            pose.heading = 'E';
-        }
+        //右转
+        facing = &(facing->RightOne());
     }
 
     void PoseHandler::Fast() noexcept{
@@ -52,6 +30,6 @@ namespace adas{
     }
 
     Pose PoseHandler::Query(void) const noexcept{
-        return pose;
+        return {point.GetX(), point.GetY(), facing->GetHeading()};
     }
 }
