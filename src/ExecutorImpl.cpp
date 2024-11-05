@@ -28,17 +28,13 @@ namespace adas
         //表驱动
         std::unordered_map<char, std::function<void(PoseHandler& PoseHandler)>> cmderMap;
         //建立操作M和前进指令的映射关系
-        MoveCommand moveCommand;
-        cmderMap.emplace('M', moveCommand.operate);
+        cmderMap.emplace('M', MoveCommand());
         //建立操作L和左转指令的映射关系
-        TurnLeftCommand turnLeftCommand;
-        cmderMap.emplace('L', turnLeftCommand.operate);
+        cmderMap.emplace('L', TurnLeftCommand());
         //建立操作R和右转指令的映射关系
-        TurnRightCommand turnRightCommand;
-        cmderMap.emplace('R', turnRightCommand.operate);
+        cmderMap.emplace('R', TurnRightCommand());
         //建立操作F和快速指令的映射关系
-        FastCommand fastCommand;
-        cmderMap.emplace('F', fastCommand.operate);
+        cmderMap.emplace('F', FastCommand());
 
         // 遍历commands里面的每个指令cmd
         for (const auto cmd : commands)
