@@ -2,6 +2,7 @@
 
 #include "PoseHandler.hpp"
 #include <functional>
+#include "ActionGroup.hpp"
 
 namespace adas{
     // class ICommand
@@ -13,130 +14,89 @@ namespace adas{
     class ReverseCommand final
     {
     public:
-        void operator()(PoseHandler& poseHandler) const noexcept{
-            poseHandler.Reverse();
+        ActionGroup operator()(PoseHandler& poseHandler) const noexcept{
+            ActionGroup actionGroup;
+            actionGroup.PushAction(ActionType::BE_REVERSE_ACTION);
+            return actionGroup;
         }
+        
     };
     
     class MoveCommand final //: public ICommand
     {
     public:
-        // void DoOperate(PoseHandler& poseHandler) const noexcept override
-        // {
-        //     if(poseHandler.IsFast())
-        //     {
-        //         poseHandler.Move();
-        //     }
-        //     poseHandler.Move();
-        // }
-        
-        // 定义函数对象operate，接收参数PoseHandler，返回void
-        // const std::function<void(PoseHandler& PoseHandler)> operate = [](PoseHandler& poseHandler) noexcept{
-        //     if(poseHandler.IsFast()){
-        //         poseHandler.Move();
-        //     }
-        //     poseHandler.Move();
-        // };
+        ActionGroup operator()(PoseHandler& poseHandler) const noexcept{
+            // 创建actionGroup对象
+            ActionGroup actionGroup;
 
-        void operator()(PoseHandler& poseHandler) const noexcept{
+            // 如果当前是倒车状态，action为ActionType::BACKWARD_1_STEP_ACTION
+            // 如果当前不是倒车状态，action为ActionType::FORWARD_1_STEP_ACTION
+            const auto action = poseHandler.IsReverse() ?
+                ActionType::BACKWARD_1_STEP_ACTION : 
+                ActionType::FORWARD_1_STEP_ACTION;
+
+            // 如果当前是加速状态，则额外执行一次action
+            // 所以要额外地将action加到actionGroup
+            // 因为ActionGroup里面是要执行的action序列
             if(poseHandler.IsFast()){
-                if(poseHandler.IsReverse()){
-                    poseHandler.Backward();
-                }else{
-                    poseHandler.Forward();
-                }
+                actionGroup.PushAction(action);
             }
 
-            if(poseHandler.IsReverse()){
-                poseHandler.Backward();
-            }else{
-                poseHandler.Forward();
-            }
+            // 无论是否为加速状态，这一个action是必须要加入到actionGroup去执行
+            actionGroup.PushAction(action);
+            return actionGroup;
         }
     };
     class TurnLeftCommand final //: public ICommand
     {
     public:
-        // void DoOperate(PoseHandler& poseHandler) const noexcept override
-        // {
-        //     if(poseHandler.IsFast())
-        //     {
-        //         poseHandler.Move();
-        //     }
-        //     poseHandler.TurnLeft();
-        // }
-
-        // const std::function<void(PoseHandler& PoseHandler)> operate = [](PoseHandler& poseHandler) noexcept{
-        //     if(poseHandler.IsFast()){
-        //         poseHandler.Move();
-        //     }
-        //     poseHandler.TurnLeft();
-        // };
-
-        void operator()(PoseHandler& poseHandler) const noexcept{
+        ActionGroup operator()(PoseHandler& poseHandler) const noexcept{
+            ActionGroup actionGroup;
             if(poseHandler.IsFast()){
                 if(poseHandler.IsReverse()){
-                    poseHandler.Backward();
+                    actionGroup.PushAction(ActionType::BACKWARD_1_STEP_ACTION);
                 }else{
-                    poseHandler.Forward();
+                    actionGroup.PushAction(ActionType::FORWARD_1_STEP_ACTION);
                 }
             }
-            
+
             if(poseHandler.IsReverse()){
-                poseHandler.TurnRight();
+                actionGroup.PushAction(ActionType::REVERSE_TURNLEFT_ACTION);
             }else{
-                poseHandler.TurnLeft();
+                actionGroup.PushAction(ActionType::TURNLEFT_ACTION);
             }
+            return actionGroup;
         }
     };
     class TurnRightCommand final //: public ICommand
     {
     public:
-        // void DoOperate(PoseHandler& poseHandler) const noexcept override
-        // {
-        //     if(poseHandler.IsFast())
-        //     {
-        //         poseHandler.Move();
-        //     }
-        //     poseHandler.TurnRight();
-        // }
-        // const std::function<void(PoseHandler& poseHandler)> operate = [](PoseHandler& poseHandler) noexcept{
-        //     if(poseHandler.IsFast()){
-        //         poseHandler.Move();
-        //     }
-        //     poseHandler.TurnRight();
-        // };
-
-        void operator()(PoseHandler& poseHandler) const noexcept{
+        ActionGroup operator()(PoseHandler& poseHandler) const noexcept{
+            ActionGroup actionGroup;
             if(poseHandler.IsFast()){
                 if(poseHandler.IsReverse()){
-                    poseHandler.Backward();
+                    actionGroup.PushAction(ActionType::BACKWARD_1_STEP_ACTION);
                 }else{
-                    poseHandler.Forward();
+                    actionGroup.PushAction(ActionType::FORWARD_1_STEP_ACTION);
                 }
             }
 
             if(poseHandler.IsReverse()){
-                poseHandler.TurnLeft();
+                actionGroup.PushAction(ActionType::REVERSE_TURNRIGHT_ACTION);
             }else{
-                poseHandler.TurnRight();
+                actionGroup.PushAction(ActionType::TURNRIGHT_ACTION);
             }
+            return actionGroup;
         }
     };
 
     class FastCommand final //: public ICommand
     {
     public:
-        // void DoOperate(PoseHandler& poseHandler) const noexcept override
-        // {
-        //     poseHandler.Fast();
-        // }
-        // const std::function<void(PoseHandler& poseHandler)> operate = [](PoseHandler& poseHandler) noexcept{
-        //     poseHandler.Fast();
-        // };
-
-        void operator()(PoseHandler& poseHandler) const noexcept{
-            poseHandler.Fast();
+        ActionGroup operator()(PoseHandler& poseHandler) const noexcept {
+            ActionGroup actionGroup;
+            actionGroup.PushAction(ActionType::BE_FAST_ACTION);
+            return actionGroup;
         }
     };
 
