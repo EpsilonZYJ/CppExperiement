@@ -1,8 +1,12 @@
 #include "ExecutorImpl.hpp"
 
-#include <new>
-#include <memory>
-#include <unordered_map>
+#include "CmdFactory.hpp"
+#include "Singleton.hpp"
+
+#include <algorithm>
+// #include <new>
+// #include <memory>
+// #include <unordered_map>
 
 namespace adas
 {
@@ -25,32 +29,14 @@ namespace adas
 
     void ExecutorImpl::Execute(const std::string &commands) noexcept
     {
-        //表驱动
-        std::unordered_map<char, std::function<void(PoseHandler& PoseHandler)>> cmderMap{
-            {'M', MoveCommand()}, //前进
-            {'L', TurnLeftCommand()}, //左转
-            {'R', TurnRightCommand()}, //右转
-            {'F', FastCommand()}, //快速
-            {'B', ReverseCommand()} //后退
-        };
-        // //建立操作M和前进指令的映射关系
-        // cmderMap.emplace('M', MoveCommand());
-        // //建立操作L和左转指令的映射关系
-        // cmderMap.emplace('L', TurnLeftCommand());
-        // //建立操作R和右转指令的映射关系
-        // cmderMap.emplace('R', TurnRightCommand());
-        // //建立操作F和快速指令的映射关系
-        // cmderMap.emplace('F', FastCommand());
+        const auto cmders = Singleton<CmderFactory>::Instance().GetCmders(commands);
 
-        // 遍历commands里面的每个指令cmd
-        for (const auto cmd : commands)
-        {
-            //根据操作查找表驱动
-            const auto it = cmderMap.find(cmd);
-            // 如果找到表驱动，执行操作对应的指令
-            if(it != cmderMap.end()){
-                it->second(poseHandler);
+        std::for_each(
+            cmders.begin(),
+            cmders.end(),
+            [this](const std::function<void(PoseHandler &poseHandler)> &cmder) noexcept {
+                cmder(poseHandler);
             }
-        }
+        );
     }
 }
