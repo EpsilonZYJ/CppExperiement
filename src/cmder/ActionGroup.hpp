@@ -22,6 +22,7 @@ namespace adas {
         explicit ActionGroup(const std::list<ActionType>& actions) noexcept;
         ~ActionGroup() = default;
 
+        ActionGroup& operator+=(const ActionGroup& rhs) noexcept;
     public:
         void PushAction(const ActionType action) noexcept;
         void DoOperate(PoseHandler& poseHandler) const noexcept;
