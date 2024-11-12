@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PoseHandler.hpp"
+#include "core/PoseHandler.hpp"
 #include <functional>
 #include "ActionGroup.hpp"
 

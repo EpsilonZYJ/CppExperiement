@@ -1,7 +1,7 @@
 #include "ExecutorImpl.hpp"
 
-#include "CmdFactory.hpp"
-#include "Singleton.hpp"
+#include "cmder/CmdFactory.hpp"
+#include "core/Singleton.hpp"
 
 #include <algorithm>
 // #include <new>
