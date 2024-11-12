@@ -100,4 +100,32 @@ namespace adas{
         }
     };
 
+    class TurnRoundCommand final {
+    public:
+        ActionGroup operator()(PoseHandler& poseHandler) const noexcept{
+            // 如果是倒车状态
+            if(poseHandler.IsReverse()){
+                return ActionGroup();//倒车状态下不执行任何操作
+            }
+            else{
+                if(poseHandler.IsFast()){
+                    return ActionGroup({
+                        ActionType::FORWARD_1_STEP_ACTION, //前进一步
+                        ActionType::TURNLEFT_ACTION, //左转
+                        ActionType::FORWARD_1_STEP_ACTION, //前进一步
+                        ActionType::TURNLEFT_ACTION, //左转
+                    });
+                }
+                else{//正常状态
+                    return ActionGroup({
+                        ActionType::TURNLEFT_ACTION, //左转
+                        ActionType::FORWARD_1_STEP_ACTION, //前进一步
+                        ActionType::TURNLEFT_ACTION, //左转
+                    });
+                }
+            }
+        }
+    };
+    
+
 } // namespace adas
